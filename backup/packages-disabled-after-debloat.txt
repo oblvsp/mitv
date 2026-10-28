@@ -1,0 +1,24 @@
+already connected to 192.168.1.128:5555
+package:com.google.android.syncadapters.calendar
+package:com.xiaomo.tv.milegal
+package:com.mitv.tvhome.michannel
+package:com.google.android.youtube.tvmusic
+package:com.google.android.videos
+package:android.autoinstalls.config.xioami.mibox3
+package:com.netflix.ninja
+package:com.miui.tv.analytics
+package:com.google.android.feedback
+package:com.google.android.youtube.tv
+package:com.netflix.tokenmanager
+package:com.xm.webcontent
+package:com.google.android.play.games
+package:com.google.android.partnersetup
+package:com.xiaomi.mimusic2
+package:com.mitv.tvhome.atv
+package:com.google.android.backdrop
+package:com.mitv.tvhome.mitvplus
+package:com.google.android.tvrecommendations
+package:com.xiaomi.statistic
+package:com.android.printspooler
+package:com.mitv.dream
+package:com.amazon.amazonvideo.livingroom

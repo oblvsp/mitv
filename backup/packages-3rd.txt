@@ -1,0 +1,8 @@
+already connected to 192.168.1.128:5555
+package:org.smarttube.beta
+package:com.esaba.downloader
+package:com.google.android.videos
+package:ru.kinopoisk.tv
+package:android.autoinstalls.config.xioami.mibox3
+package:com.alphainventor.filemanager
+package:ru.more.play

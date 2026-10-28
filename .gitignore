@@ -1,0 +1,17 @@
+# Local Android/JDK toolchains and downloaded installers
+/tools/jdk/
+/tools/sdk/
+/tools/sdk-dl/
+/tools/debug.keystore
+
+# Build outputs and generated packages
+/build/
+*.apk
+*.idsig
+/tools/install-test/
+
+# Device-specific dumps and settings
+/backup/getprop.txt
+/backup/settings-global.txt
+/backup/settings-secure.txt
+/backup/settings-system.txt
