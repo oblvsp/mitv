@@ -43,6 +43,9 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
     private int H;
     private int tileW;
     private int loadedDow = -1;
+    private long lastClockMinute = Long.MIN_VALUE;
+    private int lastDateYear = -1;
+    private int lastDateDay = -1;
     private boolean weatherOk;
     private String weatherEndpoint;
     private long lastWeatherTry;
@@ -112,12 +115,10 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
         if (dock.count() > 0) dock.setCursor(0, true);
 
         updateTopBar();
-        checkDay();
         weatherEndpoint = Weather.loadEndpoint(getApplicationContext());
         if (weatherEndpoint != null) fetchWeather();
         ticker = () -> {
             updateTopBar();
-            checkDay();
             long refreshAt = weatherOk ? 1800000L : 30000L;
             if (weatherEndpoint != null
                     && SystemClock.elapsedRealtime() - lastWeatherTry >= refreshAt) fetchWeather();
@@ -193,10 +194,28 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
     }
 
     private void updateTopBar() {
-        long now = System.currentTimeMillis();
-        clock.setText(fmtTime.format(now));
-        date.setText(fmtDate.format(now));
-        dow.setText(fmtDow.format(now));
+        java.util.Calendar now = java.util.Calendar.getInstance();
+        long millis = now.getTimeInMillis();
+        long minute = millis / 60000L;
+        if (minute != lastClockMinute) {
+            lastClockMinute = minute;
+            clock.setText(fmtTime.format(millis));
+        }
+
+        int year = now.get(java.util.Calendar.YEAR);
+        int day = now.get(java.util.Calendar.DAY_OF_YEAR);
+        if (year != lastDateYear || day != lastDateDay) {
+            lastDateYear = year;
+            lastDateDay = day;
+            date.setText(fmtDate.format(millis));
+            dow.setText(fmtDow.format(millis));
+        }
+
+        int dayOfWeek = now.get(java.util.Calendar.DAY_OF_WEEK);
+        if (dayOfWeek != loadedDow) {
+            loadedDow = dayOfWeek;
+            background.load(dayOfWeek);
+        }
     }
 
     private void fetchWeather() {
@@ -231,14 +250,6 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
             dock.setCursor(Math.min(Math.max(prev, 0), dock.count() - 1), true);
         }
         folder.repopulate(folderApps);
-    }
-
-    private void checkDay() {
-        int dow = java.util.Calendar.getInstance().get(java.util.Calendar.DAY_OF_WEEK);
-        if (dow != loadedDow) {
-            loadedDow = dow;
-            background.load(dow);
-        }
     }
 
     @Override

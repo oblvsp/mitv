@@ -69,6 +69,8 @@ class TileView extends View {
     void setFocusedState(boolean f) {
         if (focused == f) return;
         focused = f;
+        card.setColor(f ? CARD : CHIP);
+        invalidate();
         animateFocus(f ? SCALE_FOCUSED : 1f);
     }
 
@@ -80,9 +82,9 @@ class TileView extends View {
             float value = (float) an.getAnimatedValue();
             focusShift = Math.max(0f, Math.min(1f, value));
             float s = 1f + (SCALE_FOCUSED - 1f) * focusShift;
+            // The tile is a hardware layer: keep its contents cached while only transforming it.
             setScaleX(s);
             setScaleY(s);
-            invalidate();
         });
         focusAnimator.setDuration(180);
         focusAnimator.setInterpolator(FOCUS_CURVE);
@@ -94,17 +96,10 @@ class TileView extends View {
         float w = getWidth();
         float h = getHeight();
         rect.set(0, 0, w, h);
-        card.setColor(blend());
         canvas.drawRoundRect(rect, rect.width() * 0.11f, rect.width() * 0.11f, card);
         if (app != null && app.icon != null) {
             app.icon.draw(canvas);
         }
     }
 
-    private int blend() {
-        int r = 0x2E + (int) ((0xF6 - 0x2E) * focusShift);
-        int g = 0x33 + (int) ((0xF8 - 0x33) * focusShift);
-        int b = 0x3C + (int) ((0xFA - 0x3C) * focusShift);
-        return 0xFF000000 | (r << 16) | (g << 8) | b;
-    }
 }
