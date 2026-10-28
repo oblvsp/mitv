@@ -16,7 +16,7 @@
 | `launcher/` | исходники лаунчера (чистый SDK, без AndroidX; `src/ru/rufp/tvlauncher/*.java`) |
 | `build/launcher.apk` | локальный результат сборки (не хранится в Git) |
 | `backup/` | дампы до/после + `restore.sh` (полный откат) |
-| `docs/` | REMOTE, TROUBLESHOOTING, relay.md |
+| `docs/` | BUILD, TESTING, REMOTE, TROUBLESHOOTING, relay.md |
 | `tools/sdk`, `tools/jdk` | необязательные локальные установки тулчейна; в Git не хранятся |
 
 ## Сборка и установка лаунчера

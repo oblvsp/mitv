@@ -21,6 +21,7 @@ class TileView extends View {
     private Apps.AppInfo app;
     private boolean focused;
     private float focusShift;
+    private ValueAnimator focusAnimator;
 
     TileView(Context c) {
         super(c);
@@ -71,18 +72,19 @@ class TileView extends View {
     }
 
     void animateFocus(float target) {
-        float start = 1f + (SCALE_FOCUSED - 1f) * focusShift;
-        ValueAnimator a = ValueAnimator.ofFloat(start, (target - 1f) / (SCALE_FOCUSED - 1f));
-        a.addUpdateListener(an -> {
+        if (focusAnimator != null) focusAnimator.cancel();
+        float targetShift = (target - 1f) / (SCALE_FOCUSED - 1f);
+        focusAnimator = ValueAnimator.ofFloat(focusShift, targetShift);
+        focusAnimator.addUpdateListener(an -> {
             focusShift = (float) an.getAnimatedValue();
             float s = 1f + (SCALE_FOCUSED - 1f) * focusShift;
             setScaleX(s);
             setScaleY(s);
             invalidate();
         });
-        a.setDuration(180);
-        a.setInterpolator(FOCUS_CURVE);
-        a.start();
+        focusAnimator.setDuration(180);
+        focusAnimator.setInterpolator(FOCUS_CURVE);
+        focusAnimator.start();
     }
 
     @Override

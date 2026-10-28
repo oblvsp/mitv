@@ -23,6 +23,7 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Future;
 
 public class MainActivity extends Activity implements AppsPanel.Listener {
 
@@ -46,6 +47,7 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
     private long lastWeatherTry;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable ticker;
+    private Future<?> weatherTask;
     private SimpleDateFormat fmtTime;
     private SimpleDateFormat fmtDate;
     private SimpleDateFormat fmtDow;
@@ -195,8 +197,11 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
     }
 
     private void fetchWeather() {
+        if (weatherTask != null && !weatherTask.isDone()) return;
         lastWeatherTry = SystemClock.elapsedRealtime();
-        Weather.fetch((t, press, windMs) -> {
+        weatherTask = Weather.fetch((t, press, windMs) -> {
+            weatherTask = null;
+            if (isFinishing() || isDestroyed()) return;
             weatherOk = true;
             temp.setText(Math.round(t) + "°");
             pressure.setText(press + " мм рт. ст.");
@@ -317,6 +322,7 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
         super.onDestroy();
         handler.removeCallbacks(ticker);
         handler.removeCallbacks(appsRefresh);
+        if (weatherTask != null) weatherTask.cancel(true);
         if (appsReceiver != null) unregisterReceiver(appsReceiver);
     }
 }

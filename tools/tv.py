@@ -52,7 +52,7 @@ def connect():
         text=True,
     )
     out = (r.stdout + r.stderr).strip()
-    if "connected to" not in out.lower():
+    if r.returncode != 0 or "connected to" not in out.lower():
         die(f"adb connect failed: {out}")
     print(out)
 
@@ -76,8 +76,10 @@ def screenshot(out_path, keys):
     r = adb("exec-out", "screencap", "-p")
     data = r.stdout
     valid = data.startswith(PNG_MAGIC) and len(data) > 64
-    pathlib.Path(out_path).write_bytes(data)
     if valid:
+        path = pathlib.Path(out_path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
         print(f"saved {out_path} ({len(data)} bytes)")
     else:
         print(f"WARNING: {out_path} is {len(data)} bytes, not a valid PNG")

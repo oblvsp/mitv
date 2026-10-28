@@ -55,6 +55,13 @@ class BackgroundView extends View {
     }
 
     @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        topShade.setShader(null);
+        bottomShade.setShader(null);
+    }
+
+    @Override
     protected void onDraw(Canvas canvas) {
         canvas.drawColor(Color.rgb(0x1A, 0x1C, 0x22));
         if (bg != null) {

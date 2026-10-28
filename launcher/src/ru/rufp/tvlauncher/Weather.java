@@ -11,6 +11,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 class Weather {
 
@@ -20,9 +23,10 @@ class Weather {
 
     private static final String ENDPOINT =
             "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.8&lon=55.1";
+    private static ExecutorService executor;
 
-    static void fetch(Listener l) {
-        new Thread(() -> {
+    static Future<?> fetch(Listener l) {
+        return executor().submit(() -> {
             try {
                 HttpURLConnection conn = (HttpURLConnection) new URL(ENDPOINT).openConnection();
                 conn.setConnectTimeout(8000);
@@ -50,7 +54,18 @@ class Weather {
             } catch (Exception e) {
                 Log.w("rufp", "weather failed", e);
             }
-        }, "weather").start();
+        });
+    }
+
+    private static synchronized ExecutorService executor() {
+        if (executor == null) {
+            executor = Executors.newSingleThreadExecutor(r -> {
+                Thread t = new Thread(r, "weather");
+                t.setDaemon(true);
+                return t;
+            });
+        }
+        return executor;
     }
 
     private Weather() {}
