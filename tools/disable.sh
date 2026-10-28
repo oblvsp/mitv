@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -u
+set -uo pipefail
 
 HOST="${TV_HOST:-}"
 PORT="${TV_PORT:-5555}"
@@ -25,7 +25,13 @@ PROTECTED=(
   "com.google.android.tungsten.setupwraith"
 )
 
+status=0
 for pkg in "$@"; do
+  if [[ ! "$pkg" =~ ^[A-Za-z0-9_]+(\.[A-Za-z0-9_]+)+$ ]]; then
+    echo "REFUSED (invalid package name): $pkg" >&2
+    status=1
+    continue
+  fi
   protected=0
   for p in "${PROTECTED[@]}"; do
     case "$pkg" in
@@ -34,12 +40,19 @@ for pkg in "$@"; do
   done
   if [ "$protected" -eq 1 ]; then
     echo "REFUSED (protected): $pkg"
+    status=1
     continue
   fi
-  adb -s "$HOST:$PORT" shell pm disable-user --user 0 "$pkg"
+  if ! adb -s "$HOST:$PORT" shell pm disable-user --user 0 "$pkg"; then
+    echo "FAILED to disable: $pkg" >&2
+    status=1
+    continue
+  fi
   if adb -s "$HOST:$PORT" shell pm list packages -d | grep -qx "package:$pkg"; then
     echo "OK disabled: $pkg"
   else
     echo "NOT LISTED DISABLED (verify manually): $pkg"
+    status=1
   fi
 done
+exit "$status"

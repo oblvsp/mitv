@@ -1,4 +1,4 @@
-already connected to 192.168.1.128:5555
+already connected to <TV_IP>:5555
 package:com.android.providers.media.module
 package:com.google.android.overlay.modules.permissioncontroller.forframework
 package:com.google.android.overlay.googlewebview

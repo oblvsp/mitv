@@ -1,4 +1,4 @@
-already connected to 192.168.1.128:5555
+already connected to <TV_IP>:5555
 2 activities found:
   Activity #0:
     priority=2 preferredOrder=0 match=0x108000 specificIndex=-1 isDefault=true

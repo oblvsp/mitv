@@ -1,4 +1,4 @@
-already connected to 192.168.1.128:5555
+already connected to <TV_IP>:5555
 package:com.google.android.syncadapters.calendar
 package:com.xiaomo.tv.milegal
 package:com.mitv.tvhome.michannel

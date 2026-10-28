@@ -3,6 +3,7 @@
 /tools/sdk/
 /tools/sdk-dl/
 /tools/debug.keystore
+**/debug.keystore
 
 # Build outputs and generated packages
 /build/

@@ -19,7 +19,7 @@ class Weather {
     }
 
     private static final String ENDPOINT =
-            "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.7727&lon=55.0988";
+            "https://api.met.no/weatherapi/locationforecast/2.0/compact?lat=51.8&lon=55.1";
 
     static void fetch(Listener l) {
         new Thread(() -> {
