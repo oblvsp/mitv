@@ -203,7 +203,9 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
         if (weatherEndpoint == null) return;
         if (weatherTask != null && !weatherTask.isDone()) return;
         lastWeatherTry = SystemClock.elapsedRealtime();
-        weatherTask = Weather.fetch(weatherEndpoint, (t, press, windMs) -> {
+        String requestedEndpoint = weatherEndpoint;
+        weatherTask = Weather.fetch(requestedEndpoint, (t, press, windMs) -> {
+            if (!requestedEndpoint.equals(weatherEndpoint)) return;
             weatherTask = null;
             if (isFinishing() || isDestroyed()) return;
             weatherOk = true;
@@ -305,6 +307,18 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
     protected void onResume() {
         super.onResume();
         updateTopBar();
+        String configuredEndpoint = Weather.loadEndpoint(getApplicationContext());
+        if (weatherEndpoint == null ? configuredEndpoint != null : !weatherEndpoint.equals(configuredEndpoint)) {
+            if (weatherTask != null) weatherTask.cancel(true);
+            weatherTask = null;
+            weatherEndpoint = configuredEndpoint;
+            weatherOk = false;
+            lastWeatherTry = 0;
+            temp.setText("—");
+            pressure.setText("—");
+            wind.setText("—");
+            if (weatherEndpoint != null) fetchWeather();
+        }
     }
 
     @Override

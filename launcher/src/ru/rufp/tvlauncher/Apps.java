@@ -49,6 +49,12 @@ final class Apps {
             if (a.launch == null) continue;
             out.add(a);
         }
+        AppInfo weather = new AppInfo();
+        weather.pkg = "weather-settings";
+        weather.label = "Погода";
+        weather.icon = new WeatherIcon();
+        weather.launch = new Intent(ctx, WeatherSettingsActivity.class);
+        out.add(weather);
         Collator col = Collator.getInstance(new Locale("ru"));
         Collections.sort(out, (x, y) -> col.compare(x.label.toString(), y.label.toString()));
         return out;

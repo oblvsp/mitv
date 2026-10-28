@@ -22,14 +22,13 @@ export PATH="$JAVA_HOME/bin:$ANDROID_SDK_ROOT/platform-tools:$PATH"
 Build from the repository root:
 
 ```bash
-cp docs/weather.properties.example launcher/assets/weather.properties
-# Edit latitude and longitude in launcher/assets/weather.properties for your area.
 tools/apkbuild.sh launcher build/launcher.apk
 tools/apkbuild.sh mediatest build/mediatest.apk
 ```
 
-The weather location file is local and ignored by Git. If it is absent or empty,
-the launcher skips weather requests and shows placeholders.
+After installation, open **Папка приложений → Погода** and choose a location.
+The choice is saved locally on the TV. `launcher/assets/weather.properties` is
+still supported as an optional build-time fallback; it is ignored by Git.
 
 The first build creates a local debug keystore at `tools/debug.keystore` unless
 `MITV_KEYSTORE` points to another file. Keep that key in a private backup if you

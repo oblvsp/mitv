@@ -15,10 +15,9 @@ scripts. GitHub Actions runs this suite on pushes and pull requests.
 
 After building and installing `launcher.apk`, check these cases on the target TV:
 
-1. Copy `docs/weather.properties.example` to `launcher/assets/weather.properties`,
-   fill in a test location, and rebuild. Cold start with Wi-Fi connected and
-   disconnected; verify the launcher still opens and that the weather row
-   tolerates an unavailable network.
+1. Open **Папка приложений → Погода**, search for a location, and select a
+   result. Return to the launcher and verify the weather row refreshes. Repeat
+   with Wi-Fi disconnected; verify the launcher remains usable.
 2. Navigate the dock and app folder to each edge with the remote. Press keys
    rapidly in both directions and verify focus animation remains stable.
 3. Install, update, and uninstall a Leanback app while the launcher is active;
