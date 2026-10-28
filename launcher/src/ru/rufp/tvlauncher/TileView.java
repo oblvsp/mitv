@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
+import android.view.animation.DecelerateInterpolator;
 
 class TileView extends View {
 
@@ -14,7 +14,7 @@ class TileView extends View {
 
     private static final int CHIP = 0xFF2E333C;
     private static final int CARD = 0xFFF6F8FA;
-    private static final OvershootInterpolator FOCUS_CURVE = new OvershootInterpolator(1.35f);
+    private static final DecelerateInterpolator FOCUS_CURVE = new DecelerateInterpolator(1.5f);
 
     private final Paint card = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final RectF rect = new RectF();
@@ -28,6 +28,7 @@ class TileView extends View {
         setFocusable(true);
         card.setColor(CHIP);
         setClipToOutline(false);
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
     }
 
     @Override
@@ -76,7 +77,8 @@ class TileView extends View {
         float targetShift = (target - 1f) / (SCALE_FOCUSED - 1f);
         focusAnimator = ValueAnimator.ofFloat(focusShift, targetShift);
         focusAnimator.addUpdateListener(an -> {
-            focusShift = (float) an.getAnimatedValue();
+            float value = (float) an.getAnimatedValue();
+            focusShift = Math.max(0f, Math.min(1f, value));
             float s = 1f + (SCALE_FOCUSED - 1f) * focusShift;
             setScaleX(s);
             setScaleY(s);
