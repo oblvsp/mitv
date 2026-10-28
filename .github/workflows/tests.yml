@@ -17,3 +17,21 @@ jobs:
           python-version: "3.12"
       - name: Run tests and syntax checks
         run: tests/run.sh
+
+  build-apks:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: "platforms;android-34 build-tools;34.0.0"
+      - name: Build and verify APKs
+        run: |
+          tools/apkbuild.sh launcher build/launcher.apk
+          tools/apkbuild.sh mediatest build/mediatest.apk
+          "$ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner" verify build/launcher.apk
+          "$ANDROID_SDK_ROOT/build-tools/34.0.0/apksigner" verify build/mediatest.apk

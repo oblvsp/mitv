@@ -4,6 +4,7 @@
 /tools/sdk-dl/
 /tools/debug.keystore
 **/debug.keystore
+/launcher/assets/weather.properties
 
 # Build outputs and generated packages
 /build/

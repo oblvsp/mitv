@@ -44,6 +44,7 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
     private int tileW;
     private int loadedDow = -1;
     private boolean weatherOk;
+    private String weatherEndpoint;
     private long lastWeatherTry;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private Runnable ticker;
@@ -112,12 +113,14 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
 
         updateTopBar();
         checkDay();
-        fetchWeather();
+        weatherEndpoint = Weather.loadEndpoint(getApplicationContext());
+        if (weatherEndpoint != null) fetchWeather();
         ticker = () -> {
             updateTopBar();
             checkDay();
             long refreshAt = weatherOk ? 1800000L : 30000L;
-            if (SystemClock.elapsedRealtime() - lastWeatherTry >= refreshAt) fetchWeather();
+            if (weatherEndpoint != null
+                    && SystemClock.elapsedRealtime() - lastWeatherTry >= refreshAt) fetchWeather();
             handler.postDelayed(ticker, 15000);
         };
         handler.postDelayed(ticker, 15000);
@@ -197,9 +200,10 @@ public class MainActivity extends Activity implements AppsPanel.Listener {
     }
 
     private void fetchWeather() {
+        if (weatherEndpoint == null) return;
         if (weatherTask != null && !weatherTask.isDone()) return;
         lastWeatherTry = SystemClock.elapsedRealtime();
-        weatherTask = Weather.fetch((t, press, windMs) -> {
+        weatherTask = Weather.fetch(weatherEndpoint, (t, press, windMs) -> {
             weatherTask = null;
             if (isFinishing() || isDestroyed()) return;
             weatherOk = true;
