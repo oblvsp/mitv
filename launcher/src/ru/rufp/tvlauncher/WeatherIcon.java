@@ -12,11 +12,17 @@ final class WeatherIcon extends Drawable {
 
     private final Paint sun = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint cloud = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint outline = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Path cloudShape = new Path();
 
     WeatherIcon() {
         sun.setColor(0xFFFFD166);
         cloud.setColor(0xFFF1F6FC);
+        outline.setColor(0xFF111318);
+        outline.setStyle(Paint.Style.STROKE);
+        outline.setStrokeWidth(3f);
+        outline.setStrokeJoin(Paint.Join.ROUND);
+        outline.setStrokeCap(Paint.Cap.ROUND);
     }
 
     @Override
@@ -40,11 +46,12 @@ final class WeatherIcon extends Drawable {
         cloudShape.cubicTo(22, 83, 15, 78, 15, 69);
         cloudShape.close();
         canvas.drawPath(cloudShape, cloud);
+        canvas.drawPath(cloudShape, outline);
         canvas.restore();
     }
 
-    @Override public void setAlpha(int alpha) { cloud.setAlpha(alpha); sun.setAlpha(alpha); }
-    @Override public void setColorFilter(ColorFilter filter) { cloud.setColorFilter(filter); sun.setColorFilter(filter); }
+    @Override public void setAlpha(int alpha) { cloud.setAlpha(alpha); sun.setAlpha(alpha); outline.setAlpha(alpha); }
+    @Override public void setColorFilter(ColorFilter filter) { cloud.setColorFilter(filter); sun.setColorFilter(filter); outline.setColorFilter(filter); }
     @Override public int getOpacity() { return PixelFormat.TRANSLUCENT; }
     @Override public int getIntrinsicWidth() { return 100; }
     @Override public int getIntrinsicHeight() { return 100; }
